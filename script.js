@@ -1,103 +1,146 @@
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
-    const audioFile = document.getElementById('audio-file');
+    const audioFiles = document.getElementById('audioFiles');
     const audioPlayer = document.getElementById('audio-player');
     const audioElement = document.getElementById('audio-element');
     const backgroundImage = document.getElementById('background-image');
     const playPauseButton = document.getElementById('play-pause');
+    const rewindButton = document.getElementById('rewind');
+    const forwardButton = document.getElementById('forward');
     const seekSlider = document.getElementById('seek-slider');
     const currentTimeSpan = document.getElementById('current-time');
     const durationSpan = document.getElementById('duration');
     const volumeSlider = document.getElementById('volume-slider');
     const volumeIcon = document.getElementById('volume-icon');
-    const rewindButton = document.getElementById('rewind');
-    const forwardButton = document.getElementById('forward');
+    const playlistContainer = document.getElementById('playlist-container');
+    const playlist = document.getElementById('playlist');
 
-    audioFile.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const audioUrl = URL.createObjectURL(file);
-            audioElement.src = audioUrl;
+    let selectedAudioFiles = []; const audioFilesElement = document.getElementById('audioFiles');
+        
+    audioFilesElement.addEventListener('change', (event) => {
+        const files = Array.from(event.target.files);
+        selectedAudioFiles = files;
+        updatePlaylist();
+        if (selectedAudioFiles.length > 0) {
+            loadTrack(0);
             audioPlayer.style.display = 'block';
-            
-            // Add a futuristic loading effect
-            audioElement.style.opacity = '0';
-            setTimeout(() => {
-                audioElement.style.transition = 'opacity 0.5s ease-in-out';
-                audioElement.style.opacity = '1';
-            }, 100);
+        }
+    
+    selectedAudioFiles.addEventListener('change', (event) => {
+        const files = Array.from(event.target.files);
+        selectedAudioFiles = files;
+        updatePlaylist();
+        if (selectedAudioFiles.length > 0) {
+            loadTrack(0);
+            audioPlayer.style.display = 'block';
+        }
+    let currentTrackIndex = 0;
+
+    audioFiles.addEventListener('change', (event) => {
+        const files = Array.from(event.target.files);
+        audioFiles = files;
+        updatePlaylist();
+        if (audioFiles.length > 0) {
+            loadTrack(0);
+            audioPlayer.style.display = 'block';
         }
     });
+    function updatePlaylist() {
+        playlist.innerHTML = '';
+        audioFiles.forEach((file, index) => {
+            const li = document.createElement('li');
+            li.textContent = file.name;
+            li.addEventListener('click', () => loadTrack(index));
+            playlist.appendChild(li);
+        });
+    }
 
-    backgroundImage.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            
-            // Add a smooth transition for background change
-            const tempImage = new Image();
-            tempImage.onload = () => {
-                app.style.backgroundImage = `url(${imageUrl})`;
-                app.style.animation = 'fadeIn 1s ease-in-out';
-            };
-            tempImage.src = imageUrl;
+    function loadTrack(index) {
+        currentTrackIndex = index;
+        const file = audioFiles[index];
+        const fileURL = URL.createObjectURL(file);
+        audioElement.src = fileURL;
+        audioElement.load();
+        updatePlaylistSelection();
+        playAudio();
+    }
+
+    function updatePlaylistSelection() {
+        const items = playlist.getElementsByTagName('li');
+        for (let i = 0; i < items.length; i++) {
+            items[i].classList.remove('active');
         }
+        items[currentTrackIndex].classList.add('active');
+    }
+
+    function playAudio() {
+        audioElement.play();
+        updatePlayPauseButton();
+    }
+
+    audioElement.addEventListener('error', (e) => {
+        console.error('Error loading audio:', e);
+        alert('Error loading audio file. Please try another file.');
     });
 
-    // Audio player controls
-    playPauseButton.addEventListener('click', () => {
+    playPauseButton.addEventListener('click', togglePlayPause);
+    rewindButton.addEventListener('click', () => seek(-10));
+    forwardButton.addEventListener('click', () => seek(10));
+
+    function togglePlayPause() {
         if (audioElement.paused) {
             audioElement.play();
-            playPauseButton.textContent = 'Pause';
         } else {
             audioElement.pause();
-            playPauseButton.textContent = 'Play';
         }
-    });
+        updatePlayPauseButton();
+    }
 
-    audioElement.addEventListener('loadedmetadata', () => {
-        seekSlider.max = Math.floor(audioElement.duration);
-        durationSpan.textContent = formatTime(audioElement.duration);
-    });
+    function updatePlayPauseButton() {
+        playPauseButton.textContent = audioElement.paused ? '▶️' : '⏸️';
+    }
+
+    function seek(seconds) {
+        audioElement.currentTime = Math.max(0, Math.min(audioElement.duration, audioElement.currentTime + seconds));
+    }
 
     audioElement.addEventListener('timeupdate', () => {
-        seekSlider.value = Math.floor(audioElement.currentTime);
+        seekSlider.value = audioElement.currentTime;
         currentTimeSpan.textContent = formatTime(audioElement.currentTime);
     });
 
-    seekSlider.addEventListener('input', () => {
-        currentTimeSpan.textContent = formatTime(seekSlider.value);
+    audioElement.addEventListener('loadedmetadata', () => {
+        seekSlider.max = audioElement.duration;
+        durationSpan.textContent = formatTime(audioElement.duration);
     });
 
-    seekSlider.addEventListener('change', () => {
+    audioElement.addEventListener('ended', () => {
+        currentTrackIndex++;
+        if (currentTrackIndex < audioFiles.length) {
+            loadTrack(currentTrackIndex);
+        } else {
+            currentTrackIndex = 0;
+            updatePlayPauseButton();
+        }
+    });
+
+    seekSlider.addEventListener('input', () => {
         audioElement.currentTime = seekSlider.value;
     });
 
-    // Volume control
     volumeSlider.addEventListener('input', () => {
         audioElement.volume = volumeSlider.value;
         updateVolumeIcon();
     });
 
     volumeIcon.addEventListener('click', () => {
-        if (audioElement.volume > 0) {
-            audioElement.volume = 0;
-            volumeSlider.value = 0;
-        } else {
-            audioElement.volume = 1;
-            volumeSlider.value = 1;
-        }
+        audioElement.volume = audioElement.volume === 0 ? 1 : 0;
+        volumeSlider.value = audioElement.volume;
         updateVolumeIcon();
     });
 
     function updateVolumeIcon() {
-        if (audioElement.volume === 0) {
-            volumeIcon.textContent = '🔇';
-        } else if (audioElement.volume < 0.5) {
-            volumeIcon.textContent = '🔉';
-        } else {
-            volumeIcon.textContent = '🔊';
-        }
+        volumeIcon.textContent = audioElement.volume === 0 ? '🔇' : audioElement.volume < 0.5 ? '🔉' : '🔊';
     }
 
     function formatTime(seconds) {
@@ -106,7 +149,20 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
 
-    // Add custom audio visualizer (centered)
+    backgroundImage.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                app.style.backgroundImage = `url(${e.target.result})`;
+                app.style.backgroundSize = 'cover';
+                app.style.backgroundPosition = 'center';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Audio visualizer
     const canvas = document.getElementById('visualizer');
     const canvasCtx = canvas.getContext('2d');
 
@@ -134,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
 
                 const barWidth = (canvas.width / bufferLength) * 2.5;
-                let x = canvas.width / 2 - (barWidth * bufferLength) / 2;
+                let x = 0;
 
                 for (let i = 0; i < bufferLength; i++) {
                     const barHeight = (dataArray[i] / 255) * canvas.height;
@@ -144,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     gradient.addColorStop(1, 'rgba(255, 0, 255, 0.8)');
 
                     canvasCtx.fillStyle = gradient;
-                    canvasCtx.fillRect(x, (canvas.height - barHeight) / 2, barWidth, barHeight);
+                    canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
 
                     x += barWidth + 1;
                 }
@@ -152,15 +208,5 @@ document.addEventListener('DOMContentLoaded', () => {
             draw();
         }
     });
+})();
 
-    // Add event listeners for rewind and forward buttons
-    rewindButton.addEventListener('click', () => {
-        audioElement.currentTime = Math.max(audioElement.currentTime - 10, 0);
-    });
-
-    forwardButton.addEventListener('click', () => {
-        audioElement.currentTime = Math.min(audioElement.currentTime + 10, audioElement.duration);
-    });
-});
-
-app.style.animation = 'fadeIn 1s ease-in-out';
