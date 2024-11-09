@@ -1,231 +1,255 @@
 :root {
-    --primary-color: #00ffff;
-    --secondary-color: #ff00ff;
-    --background-color: #111;
-    --text-color: #fff;
-    --container-bg: rgba(255, 255, 255, 0.1);
-    --input-bg: rgba(0, 0, 0, 0.3);
+  --background: #0a0a0a;
+  --surface: #1a1a1a;
+  --primary: #00ffff;
+  --secondary: #ff00ff;
+  --text: #ffffff;
+  --text-secondary: #b3b3b3;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: 'Arial', sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-color);
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  line-height: 1.6;
 }
 
 #app {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-size: cover;
-    background-position: center;
-    transition: background-image 0.5s ease-in-out;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.5s ease-in-out;
+  padding: 2rem;
 }
 
 .player-container {
-    background-color: var(--container-bg);
-    padding: 2rem;
-    border-radius: 20px;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-    max-width: 400px;
-    width: 100%;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    animation: glow 2s infinite alternate;
+  background-color: rgba(26, 26, 26, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+  transition: all 0.3s ease;
 }
 
-@keyframes glow {
-    from {
-        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-    }
-    to {
-        box-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
-    }
+.player-container:hover {
+  box-shadow: 0 0 30px rgba(255, 0, 255, 0.3);
 }
 
 .player-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
 }
 
 .headphones-icon {
-    width: 2rem;
-    height: 2rem;
-    margin-right: 0.5rem;
-    color: var(--primary-color);
-    animation: pulse 2s infinite;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 1rem;
+  color: var(--primary);
+  animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-    }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
 h1 {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
-.file-input {
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+.file-selection, .file-input {
+  margin-bottom: 1.5rem;
 }
 
 label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--text-color);
-    text-align: center;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
 input[type="file"] {
-    width: 100%;
-    max-width: 300px; /* Adjust this value as needed */
-    padding: 0.5rem;
-    border: 1px solid var(--primary-color);
-    border-radius: 10px;
-    background-color: var(--input-bg);
-    color: var(--text-color);
-    transition: all 0.3s ease;
-    text-align: center;
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  background-color: rgba(0, 255, 255, 0.1);
+  color: var(--text);
+  transition: all 0.3s ease;
 }
 
-input[type="file"]:hover {
-    border-color: var(--secondary-color);
+input[type="file"]:hover, input[type="file"]:focus {
+  background-color: rgba(255, 0, 255, 0.1);
+  border-color: var(--secondary);
+}
+
+.playlist-container {
+  margin-bottom: 1.5rem;
+}
+
+.playlist-container h2 {
+  font-size: 1.2rem;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+#playlist {
+  list-style-type: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#playlist li {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: rgba(0, 255, 255, 0.1);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#playlist li:hover {
+  background-color: rgba(255, 0, 255, 0.1);
+}
+
+#playlist li.active {
+  background-color: rgba(255, 0, 255, 0.3);
 }
 
 .audio-player {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+  margin-top: 1.5rem;
 }
 
 #visualizer {
-    width: 100%;
-    height: 100px;
-    background-color: var(--input-bg);
-    border-radius: 10px;
-    margin-bottom: 1rem;
+  width: 100%;
+  height: 120px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  margin-bottom: 1rem;
 }
 
 .custom-controls {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 1rem;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .playback-controls {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
-    width: 100%;
-}
-
-.progress-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin-bottom: 1rem;
-}
-
-#seek-slider, #volume-slider {
-    -webkit-appearance: none;
-    appearance: none;
-    background: var(--input-bg);
-    outline: none;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 1);
-}
-
-#seek-slider {
-    flex-grow: 1;
-    margin: 0 10px;
-    height: 10px;
-}
-
-#seek-slider::-webkit-slider-thumb, #volume-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--primary-color);
-    cursor: pointer;
-    border: 4px solid var(--background-color);
-    box-shadow: -407px 0 0 400px var(--primary-color);
-}
-
-#current-time, #duration {
-    font-size: 0.8rem;
-    min-width: 45px;
-    text-align: center;
-    color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
 .control-button {
-    background-color: var(--primary-color);
-    color: var(--background-color);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin: 0 5px; /* Add some space between buttons */
+  background-color: transparent;
+  border: none;
+  color: var(--primary);
+  font-size: 1.5rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.control-button:hover {
+  color: var(--secondary);
+  transform: scale(1.1);
+}
+
+.progress-controls {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+#seek-slider {
+  flex-grow: 1;
+  margin: 0 0.5rem;
+}
+
+#current-time, #duration {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
 }
 
 .volume-control {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 #volume-slider {
-    flex-grow: 1;
-    margin-left: 10px;
-    height: 5px;
+  flex-grow: 1;
+  margin-left: 0.5rem;
 }
 
 #volume-icon {
-    font-size: 1.2rem;
-    cursor: pointer;
-    margin-right: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 5px;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--text);
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
 }
 
 footer {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: var(--text-color);
-    text-align: center;
-    padding: 1rem;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    backdrop-filter: blur(5px);
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
 }
 
-footer p {
-    margin: 0;
-    font-size: 0.875rem;
-}
+@media (max-width: 600px) {
+  .player-container {
+    padding: 1.5rem;
+  }
 
-theme:jekyll-theme-minimal
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .control-button {
+    font-size: 1.2rem;
+  }
+}
