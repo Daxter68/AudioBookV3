@@ -4,20 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futuristic Audiobook Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <link rel ="icon" type="image/x-icon" href="Favicon.png">
 </head>
 <body>
     <div id="app">
         <div class="player-container">
             <div class="player-header">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="headphones-icon"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
-                <h1>Odaine's Audiobook Player</h1>
+                <h1>Futuristic Audiobook Player</h1>
             </div>
 
-            <div class="file-input">
-                <label for="audio-file">Select Audiobook File</label>
-                <input type="file" id="audio-file" accept="audio/*">
+            <div class="file-selection">
+                <label for="audioFiles">Select Audiobooks:</label>
+                <input type="file" id="audioFiles" accept=".mp3, .m4b, .mkb" multiple>
+            </div>
+
+            <div id="playlist-container" class="playlist-container">
+                <h2>Playlist</h2>
+                <ul id="playlist"></ul>
             </div>
 
             <div id="audio-player" class="audio-player" style="display: none;">
@@ -51,7 +56,7 @@
     </div>
 
     <footer>
-        <p>© 2024 Odaine's Audiobook Player. Immerse yourself in the future of listening.</p>
+        <p>© 2024 Futuristic Audiobook Player. Immerse yourself in the future of listening.</p>
     </footer>
 
     <script src="script.js"></script>
